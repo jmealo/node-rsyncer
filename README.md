@@ -55,6 +55,8 @@ Accepts a configuration object
 * `delete` - A boolean whether delete extraneous files from destination dirs. (Default `false`)
 * `cvsExclude` - A boolean whether auto-ignore files the same way CVS does. (Default: `false`)
 * `links` - A boolean whether copy symlinks as symlinks (Default: `false`)
+* `postsync` - A command to execute syncronously on the local machine after each `rsync` completes. (passed directly to `child_process.execSync`)
+* `postsynctimeout` - An optional timeout (in seconds) for the `postsync` command. (Default: `0`)
 
 * `once` - A boolean indicating whether to run the rsync command only once. (Default: `false`)
 * `test` - Print the rsync command(s) that would be executed and exit. (Default: `false`)
