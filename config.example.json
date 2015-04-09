@@ -20,5 +20,6 @@
     "recursive" : true,
     "args" : [
        "--rsh='ssh'"
-    ]
+    ],
+    "postsync" : "curl http://some-webhook"
 }

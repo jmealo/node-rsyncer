@@ -3,6 +3,7 @@ var program = require('commander')
   , rsyncer = require('../')
   , path = require('path')
   , pkg = require('../package')
+  , execSync = require('child_process').execSync
 
 var log = console.log.bind(console, 'nsyncer:')
   , debug = log.bind(null, 'debug:')
@@ -14,6 +15,8 @@ program.version(pkg.version)
   .option('-v, --verbose',  "Show verbose output")
   .option('-D, --debug',    "Show debug output")
   .option('-t, --test',     "Print the rsync command(s) and exit")
+  .option('-p', '--postsync', "A command to execute locally after a sync has completed")
+  .option('-t', '--postsynctimeout', "A timeout in seconds for the postsync command")
 
 program.command('start').description("Starts the rsyncer").action(function (configFile) {
   try {
@@ -32,6 +35,13 @@ program.command('start').description("Starts the rsyncer").action(function (conf
 
   config.once = !!program.single;
   config.test = typeof program.test !== 'undefined' ? !!program.test : config.test;
+  config.postsync = typeof program.postsync !== 'undefined' ? program.postsync : config.postsync;
+  config.postsynctimeout = parseInt(typeof program.postsynctimeout !== 'undefined' ? program.postsynctimeout : config.postsynctimeout, 10);
+
+  if (config.postsynctimeout && !config.postsync) {
+    error('postsynctimeout requires postsync');
+    process.exit(1);
+  }
 
   var syncer = rsyncer(config)
   syncer.on('message', function (level, message) {
@@ -57,7 +67,15 @@ program.command('start').description("Starts the rsyncer").action(function (conf
   });
 
   syncer.on('sync', function () {
+    var options = {};
+
     log('sync complete');
+    if (config.postsync) {
+      if (config.postsynctimeout) {
+        options.timeout = config.postsynctimeout;
+      }
+      execSync(config.postsync, options);
+    }
   })
 });
 
