@@ -15,8 +15,8 @@ program.version(pkg.version)
   .option('-v, --verbose',  "Show verbose output")
   .option('-D, --debug',    "Show debug output")
   .option('-t, --test',     "Print the rsync command(s) and exit")
-  .option('-p', '--postsync', "A command to execute locally after a sync has completed")
-  .option('-t', '--postsynctimeout', "A timeout in seconds for the postsync command")
+  .option('-p, --postsync', "A command to execute locally after a sync has completed")
+  .option('-t, --postsynctimeout', "A timeout in seconds for the postsync command")
 
 program.command('start').description("Starts the rsyncer").action(function (configFile) {
   try {
