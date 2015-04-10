@@ -1,25 +1,20 @@
 {
-    "paths" : [
-        {
-            "src" : "/home/zivester/code/",
-            "dst" : "zivester@remote:/home/zivester/code/"
-        },
-        {
-            "src" : "/home/zivester/music/",
-            "dst" : "/tmp/music/",
-            "args" : [
-                "-t"
-            ]
-        },
-        {
-            "src" : "/tmp/will-not-be-synced",
-            "dst" : "/tmp/because-of-disabled-flag",
-            "disabled" : true
-        }
-    ],
-    "recursive" : true,
-    "args" : [
-       "--rsh='ssh'"
-    ],
-    "postsync" : "curl http://some-webhook"
+  "paths": [{
+    "src": ".",
+    "dst": "<<< SSH/SCP DESTINATION >>>"
+  }],
+  "args": [
+    "--exclude '.gitignore'",
+    "--exclude '.git'",
+    "--exclude '.*_checksums'",
+    "--exclude '.idea'",
+    "--exclude '*.emergence*'",
+    "--exclude 'sencha-build'",
+    "-a",
+    "-e \"ssh -T -c arcfour -o Compression=no -x\""
+  ],
+  "recursive": true,
+  "delete": false,
+  "links": true,
+  "postsync": "curl http://<<< USERNAME >>>:<<< PASSWORD >>>@<<< HOSTNAME >>>/import-tree && afplay /System/Library/Sounds/Submarine.aiff"
 }
